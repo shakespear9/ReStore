@@ -1,0 +1,80 @@
+FullStack DotNet + React
+[Day 1]
+dotnet new sln
+dotnet new webapi -o API
+dotnet sln add API/
+dotnet run
+
+Visual studio code extension list
+C# แล้วตั้ง extension setting เป็น Enable import Completion
+C# extension by JosKreativ
+Material Icon Theme
+nuget gallery - ใช้สำหรับ install package 
+SQLite 
+
+สร้างไฟล์ asset ให้กับ project
+Ctrl + Shift + P 
+-> .NET: Generate Assets for build and debug
+
+สิ่งที่มาใหม่ใน .NET 6
+- hot reload
+- minimal host file
+- global using
+- nullable
+- namespace declare
+
+dotnet watch run - nodemon index 
+auto reload ให้เมื่อมีการเปลี่ยนแปลงในโค้ด
+
+Startup.cs
+ConfigureServices (.NET 5)
+คือ dependency injection container ใช้สำหรับ  inject service ให้คลาส (Controller เป็นต้น) สามารถใช้งาน Service ได้
+Configure (.NET 5)
+คือ ใช้ในการ config middleware ในระหว่างที่ http request รับเข้ามา จะมี  pipeline โดยแต่ละจุดใน pipeline ก็จะผ่าน middleware ที่เราเขียนไว้ เช่น Authentication Authorization
+
+Controller
+Atrribute [Route("[controller]")] ด้วย placholder โดย [controller] จะนำชื่อของ classที่ตัดcontroller มาแมพเป็น endpoint ของ api
+
+Entity Framework
+เป็น ORM ใช้ระหว่าง class ของ .NET กับ Table ใน Database ใช้ได้แค่กับ RDMS (Relation Database) เท่านั้น 
+โดยจะมี Gateway คือ dbContext แล้ว dbSet ที่เป็นเหมือนตัวแทน Table ใน database ที่ใช้สำหรับ manipulate database 
+ใช้งานผ่าน linq function * property ของ class ต้องเป็น public
+Entity Framework Features
+- Modelling class เพื่อแมพกับ table
+- Querying 
+- Change Tracking
+- Saving
+- Concurrency
+- Transactions จัดการ transaction ได้  commit, rollback on error
+- Caching ทำการ caching data ได้ หากมีการเข้าถึงข้อมูลเดิมบ่อย ๆ
+- Built-in conventions
+- Configurations
+- Migrations (code first approach)
+
+Ctrl + Shift + P ->  Nuget package 
+- Microsoft.EntityFrameworkCore.SQLite
+- Microsoft.EntityFrameworkCore.Design (เพื่อใช้งาน Migrations)
+
+Folder Data 
+ไว้ใช้เก็บ data เช่น  DBContext class
+
+Dependency Injection แบบกำหนด  parameter ของ contructor ที่จะ initialize ในทุก ๆ  การ inject
+services.AddDbContext<StoreContext>(option =>
+{
+    option.UseSqlite(Configuration.GetConnectionString("DefaultConnection"));
+});
+
+dotnet ef command
+dotnet tool install --global dotnet-ef --version 6.0.5
+https://www.nuget.org/packages/dotnet-ef/
+
+Start Using Migrations
+dotnet ef migrations add InitialCreate -o Data/Migrations สร้าง migration ไฟล์เพื่อดู generated sql
+dotnet ef database update นำ migration ที่สร้างไป execute กับ database
+
+เปิด SQLite 
+Ctrl + Shift + P ->  Open Database
+
+dotnet new gitignore เพื่อ add gitignore
+
+dotnet ef database drop command ใช้สำหรับ drop database
