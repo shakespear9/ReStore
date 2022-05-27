@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using API.Data;
 using API.Entities;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -17,7 +18,10 @@ namespace API.Controllers
             this._context = context;
         }
 
+
         [HttpGet] // api/product
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Product))]
         public async Task<IActionResult> GetProductAsync()
         {
             var products = await _context.Products.ToListAsync();

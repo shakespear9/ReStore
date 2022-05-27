@@ -1,5 +1,5 @@
 FullStack DotNet + React
-[Day 1]
+[Section 2] .NET Web API Basic
 dotnet new sln
 dotnet new webapi -o API
 dotnet sln add API/
@@ -78,3 +78,53 @@ Ctrl + Shift + P ->  Open Database
 dotnet new gitignore เพื่อ add gitignore
 
 dotnet ef database drop command ใช้สำหรับ drop database
+
+[Section 3] React Basic (Library)
+npx create-react-app client --template typescript --use-npm
+สร้าง react app โดยใช้ typescript template และใช้ npm เป็น packgage manager หลัก
+หากเจอปัญหา  ("You are running `create-react-app` 4.0.3, which is behind the latest release (5.0.0)") ให้ clear npx cache โดย command npx clear-npx-cache
+
+useState hook 
+setState with prevState
+ setProducts((prevState) => [
+      ...prevState,
+      {
+        name: "product" + (prevState.length + 1),
+        price: prevState.length * 100 + 100,
+      },
+]);
+
+CORS (Cross origin resource sharing)
+เกิดจากการ request จาก domain ที่เป็นคนละ domain กับ API Server
+ในการอนุญาตให้ CORS ได้ให้ทำดังนี้
+1. Add CORS Service อยู่ที่ไหนใน ConfigureService ก็ได้ Order ไม่สำคัญ
+services.AddCors(); 
+2. Add CORS Middleware Order การวางสำคัญ ต้องใส่หลัง app.UseRouting();
+ app.UseCors(options =>
+{
+    options.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:3000"); 
+    //อนุญาตทุก header ทุก http request method(GET,POST,PUT,DELETE) ที่อยู่ใน Origin http://localhost:3000 ใน Production อาจมีการตั้ง config ที่ appSetting.json
+});
+
+http://json2ts.com/ web generate typescript interface from json data
+
+export interface Product{
+    id: number;
+    name: string;
+    description: string;
+    price: number;
+    pictureUrl: string;
+    brand: string;
+    type?: string; // optional
+    quantityInStock?: number; // optional
+}
+
+
+รับ props แบบ typescript
+
+interface CatalogProps {
+  products: Product[];
+  addProduct: () => void;
+}
+
+const Catalog = ({ products, addProduct }: CatalogProps) => { return ();}
