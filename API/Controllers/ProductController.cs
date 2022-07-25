@@ -24,7 +24,7 @@ namespace API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Product))]
         public async Task<IActionResult> GetProductAsync()
         {
-            var products = await _context.Products.ToListAsync();
+            var products = await _context.Products.AsNoTracking().ToListAsync();
 
             return Ok(products);
         }
