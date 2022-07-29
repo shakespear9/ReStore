@@ -9,6 +9,7 @@ import {
   Avatar,
 } from "@mui/material";
 import React from "react";
+import { Link } from "react-router-dom";
 import { Product } from "../../app/models/product";
 
 interface Props {
@@ -51,7 +52,9 @@ const ProductCard = ({ product }: Props) => {
       </CardContent>
       <CardActions>
         <Button size="small">Add To cart</Button>
-        <Button size="small">View</Button>
+        <Button component={Link} to={`/catalog/${product.id}`} size="small">
+          View
+        </Button>
       </CardActions>
     </Card>
   );

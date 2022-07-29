@@ -128,3 +128,7 @@ interface CatalogProps {
 }
 
 const Catalog = ({ products, addProduct }: CatalogProps) => { return ();}
+
+React Router
+npm install react-router-dom @types/react-router-dom
+use to navigate
