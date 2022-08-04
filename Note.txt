@@ -129,6 +129,44 @@ interface CatalogProps {
 
 const Catalog = ({ products, addProduct }: CatalogProps) => { return ();}
 
-React Router
+[Section 4] React Router (Routing)
 npm install react-router-dom @types/react-router-dom
-use to navigate
+use to navigate between page
+
+การใช้งาน React Router
+import BrowserRouter และ นำไป Wrapper App Component 
+<BrowserRouter>
+  <App />
+</BrowserRouter>
+
+ประกาศ Path ต่าง ๆ ของ web application 
+<Routes>
+  <Route path="/" element={<HomePage />} />
+  <Route path="catalog" element={<Catalog />} />
+  <Route path="catalog/:id" element={<ProductDetails />} />
+  <Route path="about" element={<AboutPage />} />
+  <Route path="contact" element={<ContactPage />} />
+</Routes>
+
+หากต้องการ navigate ไปหน้าต่าง ๆ สามารถทำได้โดยใช้ 
+Link Component 
+<Link to={"/"} >Home</Link>
+หรือ useNavigate() hook
+
+เข้าถึง parameter ของ path ได้ด้วย useParams โดย variable name ต้องตรงกัน
+const { id } = useParams<{ id: string }>();
+
+[Section 5] Error Handling 
+npm install react-router-dom @types/react-router-dom
+เราจำเป็นต้องเขียนเพื่อรองรับสถานกานณ์ที่ไม่คาดคิด เช่น bug, exception, not validate เป็นต้น
+โดย net core นั้นมีการรองรับ return status code พื้นฐานอยู่แล้วเช่น 404, 500 แต่ถ้าเป็นเรื่อง exception เราต้องทำ exceptionMiddleware เอง ไม่งั้นจะได้รับ response message ที่ไม่มีประโยชน์ต่อ client
+โดยทุก ๆ middleware นั้นจะต้องมี Invoke method ซึ่งชื่อ Invoke method ต้องเป็น InvokeAsync เท่านั้น
+
+สร้าง custom axios เพื่อการแยกโค้ด ให้ใช้งานง่ายมากขึ้น และ export agent ออกไป
+สร้างหน้า Loading เพื่อรองรับการเรียก API 
+สร้างหน้า NotFound ในกรณีที่หา route ไม่เจอ
+แปลง custom axios ให้ request ไป BuggyController เพื่อทดสอบรับ error response ที่ไม่ปกติ (400 - 500)
+แสดง toast error ในกรณีที่เกิด error
+
+debug on .NET CORE โดยการใช้ .NET Core Attach on running application
+และใช้ .Net Core Lauch debug เมื่อต้องการ debug ต้อง start up ของ application

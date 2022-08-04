@@ -10,9 +10,10 @@ import {
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import axios from "axios";
 import { Product } from "../../app/models/product";
-import { width } from "@mui/system";
+import agent from "../../app/api/agent";
+import NotFound from "../../app/errors/NotFound";
+import LoadingComponent from "../../app/layout/LoadingComponent";
 
 const ProductDetails = () => {
   const { id } = useParams<{ id: string }>();
@@ -20,17 +21,15 @@ const ProductDetails = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    axios
-      .get(`http://localhost:5000/api/Product/${id}`)
-      .then((response) => setProduct(response.data))
+    agent.Catalog.details(parseInt(id!))
+      .then((product) => setProduct(product))
       .catch((error) => console.log(error))
       .finally(() => setLoading(false));
   }, [id]);
 
-  if (loading) return <h4>Loading ...</h4>;
+  if (loading) return <LoadingComponent message="Loading product..." />;
 
-  if (!product) return <h4>No data found</h4>;
-
+  if (!product) return <NotFound />;
   return (
     <Grid container spacing={6}>
       <Grid item xs={6}>
