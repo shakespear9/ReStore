@@ -170,3 +170,44 @@ npm install react-router-dom @types/react-router-dom
 
 debug on .NET CORE โดยการใช้ .NET Core Attach on running application
 และใช้ .Net Core Lauch debug เมื่อต้องการ debug ต้อง start up ของ application
+
+[Section 6] Add Basket function 
+ตะกร้าสินค้า 
+ef framework 
+เราสามารถสร้าง class ได้หลายแบบ เช่น
+one to many relation 
+โดยสร้าง property ของฝั่ง one ด้วย Collection 
+เช่น public List<BasketItem> BasketItems 
+และสร้าง property ของฝั่ง many ด้วย foreign key property และ foreign object property
+public int BasketId {get;set;}
+public Basket Basket {get;set;}
+
+one to one relation โดยการสร้าง property 2 ตัวคือ 
+1. foreign key property
+public int ProductId {get;set;}
+2. foreign object property 
+public Product Product {get;set;}
+
+dotnet ef migrations add BasketEntityAdded ---> add migration command
+dotnet ef migrations remove ---> remove all migrations that not yet applied to the project
+revert migration 
+ref : https://stackoverflow.com/questions/38192450/how-to-unapply-a-migration-in-asp-net-core-with-ef-core
+
+สามารถกำหนดชื่อของ table ที่จะอยู่ใน database ได้ด้วย [Table("tableName")] attribute
+
+api with query string
+api/basket?productId=2&quantity=5
+คือการสร้าง action โดยที่ไม่มีการกำหนด variable ที่ตัว end point 
+แต่ยังสามารถดึงแปรมาจาก end point ได้
+[HttpPost]
+public async Task<ActionResult> AddItemToBasket(int productId, int quantity)
+
+เป็น ActionResult ที่ return create or update data กลับไปให้ client โดย actionRoute คือ endpoint ที่ใช้ดึงค่าของ data 
+CreateAtRouted(actionRoute, returnValue)
+
+app.UseCors(options =>
+            {
+                options.AllowAnyHeader().AllowAnyMethod().AllowCredentials().WithOrigins("http://localhost:3000");
+            });
+AllowCredentials = อนุญาตให้ส่ง cookie ได้ระหว่าง domain
+      
