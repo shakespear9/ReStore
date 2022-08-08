@@ -210,4 +210,11 @@ app.UseCors(options =>
                 options.AllowAnyHeader().AllowAnyMethod().AllowCredentials().WithOrigins("http://localhost:3000");
             });
 AllowCredentials = อนุญาตให้ส่ง cookie ได้ระหว่าง domain
-      
+HttpOnly Option = true ทำให้ javascript และ typescript เข้าถึง cookie ไม่ได้
+
+set axios ให้สามารถรับส่ง cookie ได้
+axios.defaults.withCredentials = true;
+
+convert json to ts interface 
+http://json2ts.com/
+

@@ -11,6 +11,7 @@ import {
 } from "@mui/material";
 import { Box } from "@mui/system";
 import React from "react";
+import { Link } from "react-router-dom";
 import { NavLink } from "react-router-dom";
 
 interface Props {
@@ -65,7 +66,13 @@ const Header = ({ toggleDarkMode, darkMode }: Props) => {
         </List>
 
         <Box display="flex">
-          <IconButton size="large" aria-label="cart" sx={{ color: "inherit" }}>
+          <IconButton
+            component={Link}
+            to="basket"
+            size="large"
+            aria-label="cart"
+            sx={{ color: "inherit" }}
+          >
             <Badge badgeContent={4} color="secondary">
               <ShoppingCart />
             </Badge>
