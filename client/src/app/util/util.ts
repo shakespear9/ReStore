@@ -4,3 +4,7 @@ export function getCookie(key:string) {
 }
 
 export const COOKIE_BASKET = "buyerId"
+
+export function currencyFormat(amount : number)  {
+    return "$" + (amount / 100).toFixed(2)
+}

@@ -13,6 +13,8 @@ import { Link } from "react-router-dom";
 import { Product } from "../../app/models/product";
 import LoadingButton from "@mui/lab/LoadingButton";
 import agent from "../../app/api/agent";
+import { useStoreContext } from "../../app/context/StoreContext";
+import { currencyFormat } from "../../app/util/util";
 
 interface Props {
   product: Product;
@@ -20,10 +22,12 @@ interface Props {
 
 const ProductCard = ({ product }: Props) => {
   const [loading, setLoading] = React.useState(false);
+  const { setBasket } = useStoreContext();
 
   const handleAddItem = (productId: number) => {
     setLoading(true);
     agent.Basket.addItem(productId)
+      .then((basket) => setBasket(basket))
       .catch((error) => console.log(error))
       .finally(() => setLoading(false));
   };
@@ -55,7 +59,7 @@ const ProductCard = ({ product }: Props) => {
       />
       <CardContent>
         <Typography gutterBottom color="secondary" variant="h5" component="div">
-          ${(product.price / 100).toFixed(2)}
+          {currencyFormat(product.price)}
         </Typography>
         <Typography variant="body2" color="text.secondary">
           {product.brand} / {product.type}

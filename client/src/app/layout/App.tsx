@@ -19,20 +19,23 @@ import NotFound from "../errors/NotFound";
 import BasketPage from "../../feature/basket/BasketPage";
 import { useStoreContext } from "../context/StoreContext";
 import agent from "../api/agent";
-import { getCookie } from "../util/util";
+import { COOKIE_BASKET, getCookie } from "../util/util";
 import LoadingComponent from "./LoadingComponent";
+import CheckoutPage from "../../feature/checkout/CheckoutPage";
 
 function App() {
   const { setBasket } = useStoreContext();
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const buyerId = getCookie("buyerId");
+    const buyerId = getCookie(COOKIE_BASKET);
     if (buyerId) {
       agent.Basket.get()
         .then((basket) => setBasket(basket))
         .catch((error) => console.log(error))
         .finally(() => setLoading(false));
+    } else {
+      setLoading(false);
     }
   }, [setBasket]);
 
@@ -67,6 +70,7 @@ function App() {
           <Route path="contact" element={<ContactPage />} />
           <Route path="server-error" element={<ServerError />} />
           <Route path="basket" element={<BasketPage />} />
+          <Route path="checkout" element={<CheckoutPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Container>

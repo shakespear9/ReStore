@@ -218,3 +218,4 @@ axios.defaults.withCredentials = true;
 convert json to ts interface 
 http://json2ts.com/
 
+Context child Component สามารถเข้าถึง state ได้โดยไม่ต้อง chain pass property
