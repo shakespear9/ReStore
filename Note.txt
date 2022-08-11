@@ -221,5 +221,8 @@ http://json2ts.com/
 Context รวม state ให้อยู่ที่จุดศูนย์กลางทำให้ child Component สามารถเข้าถึง state ได้โดยไม่ต้อง chain pass property
 
 [Section 7] Redux
+npm install react-redux
+npm install @reduxjs/toolkit
 Redux เหมาะกับ application ที่ใหญ่ขึ้น ซับซ้อนขึ้น เป็นเหมือน Context สามารถจัดกลุ่มของ state ได้ 
-Redux Toolkit ทำให้เขียน Redux ได้ง่ายยิ่งขึ้น
+Redux Toolkit ทำให้เขียน Redux ได้ง่ายยิ่งขึ้น ลด boiler plate ที่ต้องเขียนใน Redux ปกติ อีกทั้งสามารถทำเหมือนเขียนโค้ดแบบ mutating state ได้ และเป็น best practice
+เนื่องจาก Redux Store นั้นเป็น Synchronous จึงทำให้ต้องใช้ Redux Thunk เพื่อทำ asynchronous process, Redux Thunk คือ wrapper ของ function เพื่อ return function 

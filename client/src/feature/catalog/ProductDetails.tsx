@@ -16,11 +16,13 @@ import agent from "../../app/api/agent";
 import NotFound from "../../app/errors/NotFound";
 import LoadingComponent from "../../app/layout/LoadingComponent";
 import { currencyFormat } from "../../app/util/util";
-import { useStoreContext } from "../../app/context/StoreContext";
 import LoadingButton from "@mui/lab/LoadingButton";
+import { useAppDispatch, useAppSelector } from "../../app/store/configureStore";
+import { removeItem, setBasket } from "../basket/basketSlice";
 
 const ProductDetails = () => {
-  const { basket, removeItem, setBasket } = useStoreContext();
+  const { basket } = useAppSelector((state) => state.basket);
+  const dispatch = useAppDispatch();
   const { id } = useParams<{ id: string }>();
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
@@ -48,14 +50,18 @@ const ProductDetails = () => {
     if (!item || quantity > item.quantity) {
       const updatedQuantity = item ? quantity - item.quantity : quantity;
       agent.Basket.addItem(product?.id!, updatedQuantity)
-        .then((basket) => setBasket(basket))
+        .then((basket) => dispatch(setBasket(basket)))
         .catch((error) => console.log(error))
         .finally(() => setSubmitting(false));
     } else {
       // case already have item in budget and decrease quanity
       const updatedQuantity = item.quantity - quantity;
       agent.Basket.removeItem(product?.id!, updatedQuantity)
-        .then((basket) => removeItem(product?.id!, updatedQuantity))
+        .then((basket) => {
+          dispatch(
+            removeItem({ productId: product?.id!, quantity: updatedQuantity })
+          );
+        })
         .catch((error) => console.log(error))
         .finally(() => setSubmitting(false));
     }

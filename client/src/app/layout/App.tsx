@@ -4,7 +4,7 @@ import {
   CssBaseline,
   ThemeProvider,
 } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Route, Routes } from "react-router-dom";
 import AboutPage from "../../feature/about/AboutPage";
 import Catalog from "../../feature/catalog/Catalog";
@@ -16,28 +16,37 @@ import "react-toastify/dist/ReactToastify.css";
 import ServerError from "../errors/ServerError";
 import NotFound from "../errors/NotFound";
 import BasketPage from "../../feature/basket/BasketPage";
-import { useStoreContext } from "../context/StoreContext";
 import agent from "../api/agent";
 import { COOKIE_BASKET, getCookie } from "../util/util";
 import LoadingComponent from "./LoadingComponent";
 import CheckoutPage from "../../feature/checkout/CheckoutPage";
 import ContactPage from "../../feature/contact/ContactPage";
+import { useAppDispatch } from "../store/configureStore";
+import { setBasket } from "../../feature/basket/basketSlice";
 
 function App() {
-  const { setBasket } = useStoreContext();
+  const dispatch = useAppDispatch();
+  const effectRan = useRef(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const buyerId = getCookie(COOKIE_BASKET);
-    if (buyerId) {
-      agent.Basket.get()
-        .then((basket) => setBasket(basket))
-        .catch((error) => console.log(error))
-        .finally(() => setLoading(false));
-    } else {
-      setLoading(false);
+    if (effectRan.current === true || process.env.NODE_ENV === "production") {
+      const buyerId = getCookie(COOKIE_BASKET);
+      if (buyerId) {
+        agent.Basket.get()
+          .then((basket) => {
+            dispatch(setBasket(basket));
+          })
+          .catch((error) => console.log(error))
+          .finally(() => setLoading(false));
+      } else {
+        setLoading(false);
+      }
     }
-  }, [setBasket]);
+    return () => {
+      effectRan.current = true;
+    };
+  }, [dispatch]);
 
   const [darkMode, setDarkMode] = useState(false);
   const paletteType = darkMode ? "dark" : "light";
