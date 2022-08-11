@@ -218,4 +218,8 @@ axios.defaults.withCredentials = true;
 convert json to ts interface 
 http://json2ts.com/
 
-Context child Component สามารถเข้าถึง state ได้โดยไม่ต้อง chain pass property
+Context รวม state ให้อยู่ที่จุดศูนย์กลางทำให้ child Component สามารถเข้าถึง state ได้โดยไม่ต้อง chain pass property
+
+[Section 7] Redux
+Redux เหมาะกับ application ที่ใหญ่ขึ้น ซับซ้อนขึ้น เป็นเหมือน Context สามารถจัดกลุ่มของ state ได้ 
+Redux Toolkit ทำให้เขียน Redux ได้ง่ายยิ่งขึ้น

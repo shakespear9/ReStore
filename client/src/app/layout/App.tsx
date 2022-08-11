@@ -1,4 +1,3 @@
-import { ContactPage } from "@mui/icons-material";
 import {
   Container,
   createTheme,
@@ -22,6 +21,7 @@ import agent from "../api/agent";
 import { COOKIE_BASKET, getCookie } from "../util/util";
 import LoadingComponent from "./LoadingComponent";
 import CheckoutPage from "../../feature/checkout/CheckoutPage";
+import ContactPage from "../../feature/contact/ContactPage";
 
 function App() {
   const { setBasket } = useStoreContext();
