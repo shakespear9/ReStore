@@ -226,3 +226,29 @@ npm install @reduxjs/toolkit
 Redux เหมาะกับ application ที่ใหญ่ขึ้น ซับซ้อนขึ้น เป็นเหมือน Context สามารถจัดกลุ่มของ state ได้ 
 Redux Toolkit ทำให้เขียน Redux ได้ง่ายยิ่งขึ้น ลด boiler plate ที่ต้องเขียนใน Redux ปกติ อีกทั้งสามารถทำเหมือนเขียนโค้ดแบบ mutating state ได้ และเป็น best practice
 เนื่องจาก Redux Store นั้นเป็น Synchronous จึงทำให้ต้องใช้ Redux Thunk เพื่อทำ asynchronous process, Redux Thunk คือ wrapper ของ function เพื่อ return function 
+Redux Thunk ต้องไปเขียนใน extraReducer 
+โดยทำการ create Action Creator ก่อน แล้วนำ builder มา Add Case แล้วมาทำการ setState โดย action.payload ได้มาจากการ return ของ Action Creator และ action.meta.arg มาจาก parameter ที่รับของ Action Creator
+
+Entity Adapter
+ทำมาเพื่อ normalized data เพื่อให้จัดการ data ได้ง่ายขึ้นด้วย function setAll, upsert และอื่นๆ  
+อีกทั้งมี prebuilt reducers ต่างๆ มากมายเหมือนทำ repository ใน java เช่น selectById, selectByIds(get all)
+
+กำหนด selector ไว้ก่อนได้เลยที่ slice ทำให้เมื่อตอนใช้งาน store สามารถส่ง function เข้าไปใน useAppSelector hook 
+// predefined selector
+export const productSelectors = productAdapter.getSelectors(
+  (state: RootState) => state.catalog
+);
+
+// import productSelector และเข้าไปใน useAppSelector เพื่อเข้าถึง catalog state ได้เลย ซึ่งมี prebuilt reducers มากมาย ๆ ให้ใช้งานเช่น selectAll
+const products = useAppSelector(productSelectors.selectAll);
+
+thunk error handling 
+ถึงแม้เราจะทำ catch block ไว้จับ error แต่ redux ยังมองว่า action creator นั้น fullfill ดังนั้น redux จึงมี paremeter ตัวช่วยคือ thunkAPI ที่สามารถ return case ต่างๆ ของ action creator เช่น rejected
+// _ (underscore paremter) คือ การ void parameter ใน javascript
+  async (_, thunkAPI) => {
+    try {
+      return await agent.Catalog.list();
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue({ error: error.data });
+    }
+  }

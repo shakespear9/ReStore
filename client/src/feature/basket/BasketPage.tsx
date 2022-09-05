@@ -12,42 +12,16 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import { useState } from "react";
-import agent from "../../app/api/agent";
 import LoadingButton from "@mui/lab/LoadingButton";
 import BasketSummary from "./BasketSummary";
 import { currencyFormat } from "../../app/util/util";
 import { Link } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../app/store/configureStore";
-import { removeItem, setBasket } from "./basketSlice";
+import { addBasketItemAsync, removeBasketItemAsync } from "./basketSlice";
 
 const BasketPage = () => {
-  const { basket } = useAppSelector((state) => state.basket);
+  const { basket, status } = useAppSelector((state) => state.basket);
   const dispatch = useAppDispatch();
-  const [status, setStatus] = useState({
-    loading: false,
-    name: "",
-  });
-
-  const handleAddItem = (productId: number, name: string) => {
-    setStatus({ loading: true, name });
-    agent.Basket.addItem(productId)
-      .then((basket) => dispatch(setBasket(basket)))
-      .catch((error) => console.log(error))
-      .finally(() => setStatus({ loading: false, name: "" }));
-  };
-
-  const handleRemoveItem = (
-    productId: number,
-    name: string,
-    quantity: number = 1
-  ) => {
-    setStatus({ loading: true, name });
-    agent.Basket.removeItem(productId, quantity)
-      .then(() => dispatch(removeItem({ productId, quantity })))
-      .catch((error) => console.log(error))
-      .finally(() => setStatus({ loading: false, name: "" }));
-  };
 
   if (!basket)
     return <Typography variant="h3">Your basket is empty.</Typography>;
@@ -87,10 +61,16 @@ const BasketPage = () => {
                 <TableCell align="center">
                   <LoadingButton
                     loading={
-                      status.loading && status.name === "rem" + item.name
+                      status === "pendingRemoveItem" + item.productId + "rem"
                     }
                     onClick={() => {
-                      handleRemoveItem(item.productId, "rem" + item.name);
+                      dispatch(
+                        removeBasketItemAsync({
+                          productId: item.productId,
+                          quantity: 1,
+                          name: "rem",
+                        })
+                      );
                     }}
                     color="error"
                   >
@@ -98,11 +78,11 @@ const BasketPage = () => {
                   </LoadingButton>
                   {item.quantity}
                   <LoadingButton
-                    loading={
-                      status.loading && status.name === "add" + item.name
-                    }
+                    loading={status === "pendingAddItem" + item.productId}
                     onClick={() =>
-                      handleAddItem(item.productId, "add" + item.name)
+                      dispatch(
+                        addBasketItemAsync({ productId: item.productId })
+                      )
                     }
                     color="secondary"
                   >
@@ -115,15 +95,17 @@ const BasketPage = () => {
                 <TableCell align="right">
                   <LoadingButton
                     loading={
-                      status.loading && status.name === "del" + item.name
+                      status === "pendingRemoveItem" + item.productId + "del"
                     }
-                    onClick={() =>
-                      handleRemoveItem(
-                        item.productId,
-                        "del" + item.name,
-                        item.quantity
-                      )
-                    }
+                    onClick={() => {
+                      dispatch(
+                        removeBasketItemAsync({
+                          productId: item.productId,
+                          quantity: item.quantity,
+                          name: "del",
+                        })
+                      );
+                    }}
                     color="error"
                   >
                     <Delete />

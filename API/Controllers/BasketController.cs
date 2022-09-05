@@ -39,7 +39,7 @@ public class BasketController : BaseApiController
 
         var product = await _context.Products.FirstOrDefaultAsync(p => p.Id == productId);
 
-        if (product is null) return NotFound();
+        if (product is null) return BadRequest(new ProblemDetails { Title = "Product Not Found" });
 
         basket.AddItem(product, quantity);
 
